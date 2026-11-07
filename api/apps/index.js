@@ -22,7 +22,8 @@ export default handler({
 
     // every word must match somewhere in the app's text, features, use cases or integrations
     for (const word of q.toLowerCase().split(/\s+/).filter(Boolean).slice(0, 6)) {
-      add(`(a.name || ' ' || a.tagline || ' ' || a.description || ' ' || c.name || ' ' ||
+      add(`(a.name || ' ' || a.tagline || ' ' || a.description || ' ' || c.name || ' ' || c.description || ' ' ||
+            COALESCE(s.full_name, '') || ' ' ||
             array_to_string(a.use_cases, ' ') || ' ' || array_to_string(a.integrations, ' ') || ' ' ||
             COALESCE((SELECT string_agg(f.feature_text, ' ') FROM app_features f WHERE f.app_id = a.id), '')
            ) ILIKE ?`, `%${word.replace(/[%_\\]/g, '\\$&')}%`);

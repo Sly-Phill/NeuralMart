@@ -85,7 +85,12 @@ export function StoreProvider({ children }) {
   const applyPromo = useCallback(async (code) => {
     if (!code.trim()) return { ok: false, msg: 'Enter a promo code first.' };
     try {
-      const p = await api(`/checkout?promo=${encodeURIComponent(code.trim())}`);
+      const res = await api(`/checkout?promo=${encodeURIComponent(code.trim())}`);
+      if (!res.valid) {
+        toast('Invalid promo code', { type: 'error', description: res.error });
+        return { ok: false, msg: res.error };
+      }
+      const p = { code: res.code, percentOff: res.percentOff };
       setPromo(p);
       toast(`${p.code} applied — ${p.percentOff}% off!`);
       return { ok: true, msg: `${p.percentOff}% off applied!` };

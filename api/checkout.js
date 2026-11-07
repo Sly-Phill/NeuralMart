@@ -16,11 +16,17 @@ async function findPromo(raw) {
 }
 
 export default handler({
+  // A wrong code is a normal answer ({ valid: false }), not an HTTP error.
   async GET(req) {
     await requireUser(req);
-    const promo = await findPromo(req.query.promo);
-    if (!promo) throw badRequest('Enter a promo code first.');
-    return promo;
+    try {
+      const promo = await findPromo(req.query.promo);
+      if (!promo) return { valid: false, error: 'Enter a promo code first.' };
+      return { valid: true, ...promo };
+    } catch (err) {
+      if (err.status === 400) return { valid: false, error: err.message };
+      throw err;
+    }
   },
 
   async POST(req) {

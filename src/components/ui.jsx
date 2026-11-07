@@ -134,7 +134,8 @@ export function EmptyState({ icon: Icon, title, text, children }) {
 }
 
 export function Skeleton({ className = '' }) {
-  return <div className={`shimmer-overlay rounded-xl bg-line/[0.07] ${className}`} aria-hidden="true" />;
+  // a <span> so it is valid inside <p> and headings too
+  return <span className={`shimmer-overlay block rounded-xl bg-line/[0.07] ${className}`} aria-hidden="true" />;
 }
 
 export function AppCardSkeleton() {

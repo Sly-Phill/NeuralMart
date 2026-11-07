@@ -23,9 +23,10 @@ export default function Library() {
   const toast = useToast();
   const [view, setView] = useState('chart');
   const [launching, setLaunching] = useState(null);
-  const lib = useApi('/library');
+  // only fetch account data while logged in (avoids a 401 during logout)
+  const lib = useApi(user ? '/library' : null);
   // re-fetch whenever the wishlist changes so hearts on this page stay in sync
-  const wish = useApi(`/wishlist?v=${wishlist.join(',')}`);
+  const wish = useApi(user ? `/wishlist?v=${wishlist.join(',')}` : null);
   const recentApi = useApi(recent.length ? `/apps?slugs=${recent.join(',')}` : null);
 
   const owned = lib.data?.apps || [];
